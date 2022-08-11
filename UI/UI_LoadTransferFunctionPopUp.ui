@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LoadTransferFunctionPopUp</class>
+ <widget class="QDialog" name="LoadTransferFunctionPopUp">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>384</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QTextEdit" name="TransferFunctionTextBox"/>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>175</height>
+        </size>
+       </property>
+       <property name="title">
+        <string>Interpretado como</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDialogButtonBox" name="TransferFunctionButtonBox">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>TransferFunctionButtonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>LoadTransferFunctionPopUp</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>296</x>
+     <y>371</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>186</x>
+     <y>356</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>TransferFunctionButtonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>LoadTransferFunctionPopUp</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>228</x>
+     <y>365</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>136</x>
+     <y>371</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>TransferFunctionTextBox</sender>
+   <signal>textChanged()</signal>
+   <receiver>LoadTransferFunctionPopUp</receiver>
+   <slot>updateTransferFunction()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>375</x>
+     <y>163</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>2</x>
+     <y>197</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>updateTransferFunction()</slot>
+ </slots>
+</ui>

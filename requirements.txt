@@ -1,0 +1,8 @@
+numpy~=1.23.1
+sympy~=1.10.1
+PyQt6~=6.3.1
+scipy~=1.9.0
+mplcursors~=0.5.1
+matplotlib~=3.5.2
+pandas~=1.4.3
+PyLTSpice~=2.0.1
