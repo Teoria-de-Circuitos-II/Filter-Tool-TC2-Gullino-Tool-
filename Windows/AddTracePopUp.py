@@ -1,7 +1,7 @@
-from typing import Union, Tuple
+from typing import Union, Tuple, List
 
 import pandas as pd
-from PyQt6 import QtGui, QtWidgets
+from PyQt6 import QtGui, QtWidgets, QtCore
 from Utils.Trace import linestyle_dict, Trace, TraceType
 import sympy as sp
 from sympy.parsing.sympy_parser import parse_expr, T
@@ -13,19 +13,84 @@ permited_file_types = "RAW Spice file (*.raw);;" \
                       "CSV File (*.csv)"
 
 
+class YAxisDataWidget:
+    def __init__(self, parent: QtWidgets, CBdata: List[str], row: int = 0, column: int = 0, rowspan: int = 1,
+                 columnspan: int = 1):
+        self.color = QtGui.QColor("#FF8C00")
+        self.GroupBox = QtWidgets.QGroupBox()
+        self.GroupBox.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred,
+                                                          QtWidgets.QSizePolicy.Policy.Maximum))
+        self.GriLayout: QtWidgets.QGridLayout = QtWidgets.QGridLayout()
+        self.GroupBox.setLayout(self.GriLayout)
+        self.YDataLabel = QtWidgets.QLabel("Eje Y:", self.GroupBox)
+        self.YDataCB = QtWidgets.QComboBox(self.GroupBox)
+        self.YDataCB.addItems(CBdata)
+        self.YOpLabel = QtWidgets.QLabel("Operacion:", self.GroupBox)
+        self.YOpLE = QtWidgets.QLineEdit(self.GroupBox)
+        self.TraceNameLabel = QtWidgets.QLabel("Nombre:", self.GroupBox)
+        self.TraceNameLE = QtWidgets.QLineEdit(self.GroupBox)
+        self.TraceColorLabel = QtWidgets.QLabel("Color:", self.GroupBox)
+        self.TraceColorButton = QtWidgets.QPushButton(self.GroupBox)
+        self.TraceColorButton.setMinimumSize(QtCore.QSize(30, 30))
+        self.TraceColorButton.setMaximumSize(QtCore.QSize(30, 30))
+        self.TraceColorButton.setText("")
+        self.TraceLineTypeLabel = QtWidgets.QLabel("Tipo de Linea:", self.GroupBox)
+        self.TraceLineTypeCB = QtWidgets.QComboBox(self.GroupBox)
+        self.TraceLineTypeCB.addItems(linestyle_dict.keys())
+
+        self.GriLayout.addWidget(self.YDataLabel, 0, 0)
+        self.GriLayout.addWidget(self.YDataCB, 0, 1)
+        self.GriLayout.addWidget(self.YOpLabel, 0, 2)
+        self.GriLayout.addWidget(self.YOpLE, 0, 3, 1, 3)
+        self.GriLayout.addWidget(self.TraceNameLabel, 1, 0)
+        self.GriLayout.addWidget(self.TraceNameLE, 1, 1)
+        self.GriLayout.addWidget(self.TraceColorLabel, 1, 2)
+        self.GriLayout.addWidget(self.TraceColorButton, 1, 3)
+        self.GriLayout.addWidget(self.TraceLineTypeLabel, 1, 4)
+        self.GriLayout.addWidget(self.TraceLineTypeCB, 1, 5)
+        self.TraceColorButton.clicked.connect(lambda: YAxisDataWidget.ChooseColor(self))
+        palette = self.TraceColorButton.palette()
+        palette.setColor(QtGui.QPalette.ColorRole.Button, self.color)
+        self.TraceColorButton.setPalette(palette)
+        parent.layout().addWidget(self.GroupBox, row, column, rowspan, columnspan)
+
+    def getData(self):
+        if not len(self.YOpLE.text()):
+            yop = getLambdaFromOperation("x")
+        else:
+            yop = getLambdaFromOperation(self.YOpLE.text())
+        return self.YDataCB.currentText(), self.TraceNameLE.text(), self.color.name(), \
+               linestyle_dict[self.TraceLineTypeCB.currentText()], yop
+
+    def updateOptions(self, CBdata: List[str]):
+        self.YDataCB.clear()
+        self.YDataCB.addItems(CBdata)
+
+    def ChooseColor(self):
+        self.color = QtWidgets.QColorDialog.getColor(self.color)
+        palette = self.TraceColorButton.palette()
+        palette.setColor(QtGui.QPalette.ColorRole.Button, self.color)
+        self.TraceColorButton.setPalette(palette)
+
+
 class AddTracePopUp(QtWidgets.QDialog, UI_AddTracePopUp.Ui_AddTracePopUp):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.TraceTypeCB.addItems(linestyle_dict.keys())
+        self.BodeTraceTypeCB.addItems(linestyle_dict.keys())
         self.MonteCarloGroupBox.setVisible(False)
-        self.SignalGroupBox.setVisible(False)
+        self.scrollArea.setVisible(False)
         self.color = QtGui.QColor("#FF8C00")
+        palette = self.BodeColorButton.palette()
+        palette.setColor(QtGui.QPalette.ColorRole.Button, self.color)
+        self.BodeColorButton.setPalette(palette)
         self.reader: Union[CSVDataReader, SpiceDataReader] = None
-        self.tracesnames = None
-        self.traces: Union[Trace, Tuple[Trace, Trace]] = None
+        self.tracesnames: List[str] = []
+        self.traces: List[Trace] = []
+        self.YDataList: List[YAxisDataWidget] = []
+        self.YAxisQuantUpdate(self.YAxisQuantSpinBox.value())
 
-    def exec(self) -> Union[Trace, Tuple[Trace, Trace]]:
+    def exec(self) -> List[Trace]:
         super().exec()
         return self.traces
 
@@ -35,22 +100,33 @@ class AddTracePopUp(QtWidgets.QDialog, UI_AddTracePopUp.Ui_AddTracePopUp):
             QtWidgets.QMessageBox.warning(self, "Advertencia",
                                           f"Elegi el archivo o te encripto todos los datos.")
             return
+        for item in self.YDataList:
+            if self.XDataCB.currentText() == item.YDataCB.currentText() and self.SignalRadioButton.isChecked():
+                QtWidgets.QMessageBox.warning(self, "Advertencia",
+                                              f"Elegi otros ejes que eso no puedo.")
+                return
+
+        if (self.FreqDataCB.currentText() == self.ModDataCB.currentText() or
+            self.FreqDataCB.currentText() == self.PhaseDataCB.currentText()) and self.BodeRadioButton.isChecked():
+            QtWidgets.QMessageBox.warning(self, "Advertencia",
+                                          f"Elegi otros ejes que eso no puedo.")
+            return
 
         if self.BodeRadioButton.isChecked():
             if not len(self.FreqOpLE.text()):
                 freqop = getLambdaFromOperation("x")
             else:
-                freqop = getLambdaFromOperation(self.XOpLE.text())
+                freqop = getLambdaFromOperation(self.FreqOpLE.text())
 
             if not len(self.ModOpLE.text()):
                 modop = getLambdaFromOperation("x")
             else:
-                modop = getLambdaFromOperation(self.YOpLE.text())
+                modop = getLambdaFromOperation(self.ModOpLE.text())
 
             if not len(self.PhaseOpLE.text()):
                 phaseop = getLambdaFromOperation("x")
             else:
-                phaseop = getLambdaFromOperation(self.YOpLE.text())
+                phaseop = getLambdaFromOperation(self.PhaseOpLE.text())
 
             match self.reader:
                 case CSVDataReader():
@@ -75,16 +151,16 @@ class AddTracePopUp(QtWidgets.QDialog, UI_AddTracePopUp.Ui_AddTracePopUp):
                         phasereader.config("Phase", self.FreqDataCB.currentText(), self.PhaseDataCB.currentText(),
                                            freqop, phaseop)
 
-            modtrace = Trace(self.TraceNameLE.text(), self.reader, self.color.name(),
-                             linestyle_dict[self.TraceTypeCB.currentText()], TraceType.Module)
+            modtrace = Trace(self.BodeTraceNameLE.text(), self.reader, self.color.name(),
+                             linestyle_dict[self.BodeTraceTypeCB.currentText()], TraceType.Module)
 
             if phasereader is None:
                 phasereader = self.reader
 
-            phasetrace = Trace(self.TraceNameLE.text(), phasereader, self.color.name(),
-                               linestyle_dict[self.TraceTypeCB.currentText()], TraceType.Phase)
+            phasetrace = Trace(self.BodeTraceNameLE.text(), phasereader, self.color.name(),
+                               linestyle_dict[self.BodeTraceTypeCB.currentText()], TraceType.Phase)
 
-            self.traces = (modtrace, phasetrace)
+            self.traces = [modtrace, phasetrace]
 
         else:
             if not len(self.XOpLE.text()):
@@ -92,26 +168,42 @@ class AddTracePopUp(QtWidgets.QDialog, UI_AddTracePopUp.Ui_AddTracePopUp):
             else:
                 xop = getLambdaFromOperation(self.XOpLE.text())
 
-            if not len(self.YOpLE.text()):
-                yop = getLambdaFromOperation("x")
-            else:
-                yop = getLambdaFromOperation(self.YOpLE.text())
-
             match self.reader:
                 case CSVDataReader():
-                    self.reader.config("Signal", self.XDataCB.currentText(), self.YDataCB.currentText(),
-                                       xop, yop)
+                    for YAxis in self.YDataList:
+                        reader = CSVDataReader(self.Dir2FileLE.text())
+                        data = YAxis.getData()
+                        reader.config("Signal", self.XDataCB.currentText(), data[0],
+                                      xop, data[4])
+                        trace = Trace(data[1], reader, data[2],
+                                      data[3], TraceType.Signal)
+                        self.traces.append(trace)
 
                 case SpiceDataReader():
                     if self.IsMCCheckBox.isChecked():
-                        self.reader = SpiceDataReader(self.Dir2FileLE.text(), isMonteCarlo=True)
-                        self.reader.config("Signal", self.XDataCB.currentText(), self.YDataCB.currentText(),
-                                           xop, yop, self.StepQuantSpinBox.value())
+                        for YAxis in self.YDataList:
+                            reader = SpiceDataReader(self.Dir2FileLE.text(), isMonteCarlo=True)
+                            data = YAxis.getData()
+
+                            reader.config("Signal", self.XDataCB.currentText(), data[0],
+                                          xop, data[4], self.StepQuantSpinBox.value())
+
+                            trace = Trace(data[1], reader, data[2],
+                                          data[3], TraceType.Signal)
+
+                            self.traces.append(trace)
                     else:
-                        self.reader.config("Signal", self.XDataCB.currentText(), self.YDataCB.currentText(),
-                                           xop, yop)
-            self.traces = Trace(self.TraceNameLE.text(), self.reader, self.color.name(),
-                                linestyle_dict[self.TraceTypeCB.currentText()], TraceType.Signal)
+                        for YAxis in self.YDataList:
+                            reader = SpiceDataReader(self.Dir2FileLE.text())
+                            data = YAxis.getData()
+                            reader.config("Signal", self.XDataCB.currentText(), data[0],
+                                          xop, data[4])
+
+                            trace = Trace(data[1], reader, data[2],
+                                          data[3], TraceType.Signal)
+
+                            self.traces.append(trace)
+
         self.done(0)
         pass
 
@@ -119,11 +211,11 @@ class AddTracePopUp(QtWidgets.QDialog, UI_AddTracePopUp.Ui_AddTracePopUp):
         self.done(0)
         pass
 
-    def ChooseColor(self):
+    def ChooseBodeColor(self):
         self.color = QtWidgets.QColorDialog.getColor(self.color)
-        palette = self.ColorButton.palette()
+        palette = self.BodeColorButton.palette()
         palette.setColor(QtGui.QPalette.ColorRole.Button, self.color)
-        self.ColorButton.setPalette(palette)
+        self.BodeColorButton.setPalette(palette)
 
     def BrowseFile(self):
         path2file = QtWidgets.QFileDialog.getOpenFileName(filter=permited_file_types)
@@ -137,15 +229,29 @@ class AddTracePopUp(QtWidgets.QDialog, UI_AddTracePopUp.Ui_AddTracePopUp):
 
         self.tracesnames = self.reader.get_traces_names()
         self.XDataCB.clear()
-        self.YDataCB.clear()
         self.FreqDataCB.clear()
         self.ModDataCB.clear()
         self.PhaseDataCB.clear()
         self.XDataCB.addItems(self.tracesnames)
-        self.YDataCB.addItems(self.tracesnames)
         self.FreqDataCB.addItems(self.tracesnames)
         self.ModDataCB.addItems(self.tracesnames)
         self.PhaseDataCB.addItems(self.tracesnames)
+        for Yaxis in self.YDataList:
+            Yaxis.updateOptions(self.tracesnames)
+
+    def YAxisQuantUpdate(self, newQuant: int):
+        actualQuant = len(self.YDataList)
+
+        if actualQuant > newQuant:
+            for i in range(actualQuant - newQuant):
+                oldY = self.YDataList.pop()
+                oldY.GroupBox.deleteLater()
+
+        else:
+            for i in range(newQuant - actualQuant):
+                newYData = YAxisDataWidget(self.SignalGroupBox, self.tracesnames, actualQuant + i + 1, 0, 1, 5)
+                self.YDataList.append(newYData)
+        return
 
 
 def getLambdaFromOperation(strexpr: str):

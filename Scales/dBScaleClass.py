@@ -55,7 +55,7 @@ class dBScale(mscale.ScaleBase):
         put a degree symbol after the value.
         """
         fmt = FuncFormatter(
-            lambda x, pos=None: f"{20*ma.log10(x):.0f} dB")
+            lambda x, pos=None: f"{20*ma.log10(x):.2f} dB")
         axis.set(major_locator=ticker.LogLocator(),
                  major_formatter=fmt, minor_formatter=fmt)
 

@@ -55,7 +55,7 @@ class OctaveScale(mscale.ScaleBase):
         put a degree symbol after the value.
         """
         fmt = FuncFormatter(
-            lambda x, pos=None: f"{ma.log2(x):.0f}")
+            lambda x, pos=None: f"{ma.log2(x):.2f}")
         axis.set(major_locator=ticker.LogLocator(),
                  major_formatter=fmt, minor_formatter=fmt)
 

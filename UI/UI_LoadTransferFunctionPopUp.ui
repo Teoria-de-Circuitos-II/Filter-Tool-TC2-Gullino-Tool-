@@ -7,42 +7,92 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>384</height>
+    <height>415</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QTextEdit" name="TransferFunctionTextBox"/>
-     </item>
-     <item>
-      <widget class="QGroupBox" name="groupBox">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>175</height>
-        </size>
-       </property>
-       <property name="title">
-        <string>Interpretado como</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QDialogButtonBox" name="TransferFunctionButtonBox">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="standardButtons">
-        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-       </property>
-      </widget>
-     </item>
-    </layout>
+   <item row="0" column="0" colspan="2">
+    <widget class="QLineEdit" name="TransferFunctionLineEdit"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="LineTypeLabel">
+     <property name="text">
+      <string>Tipo de linea</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QComboBox" name="LineTypeCB"/>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="ColorLabel">
+     <property name="text">
+      <string>Color</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QPushButton" name="ColorButton">
+     <property name="minimumSize">
+      <size>
+       <width>30</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>30</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="TraceNameLabel">
+     <property name="text">
+      <string>Nombre de linea</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QLineEdit" name="TraceNameLE"/>
+   </item>
+   <item row="5" column="0">
+    <widget class="QPushButton" name="CheckButton">
+     <property name="text">
+      <string>Check</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QDialogButtonBox" name="TransferFunctionButtonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QGroupBox" name="TexGroupBox">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>175</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>Interpretado como</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2"/>
+    </widget>
    </item>
   </layout>
  </widget>
@@ -55,8 +105,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>296</x>
-     <y>371</y>
+     <x>393</x>
+     <y>403</y>
     </hint>
     <hint type="destinationlabel">
      <x>186</x>
@@ -71,33 +121,67 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>228</x>
-     <y>365</y>
+     <x>329</x>
+     <y>397</y>
     </hint>
     <hint type="destinationlabel">
      <x>136</x>
-     <y>371</y>
+     <y>363</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>TransferFunctionTextBox</sender>
-   <signal>textChanged()</signal>
+   <sender>CheckButton</sender>
+   <signal>clicked()</signal>
    <receiver>LoadTransferFunctionPopUp</receiver>
    <slot>updateTransferFunction()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>375</x>
-     <y>163</y>
+     <x>46</x>
+     <y>392</y>
     </hint>
     <hint type="destinationlabel">
-     <x>2</x>
-     <y>197</y>
+     <x>1</x>
+     <y>319</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>TransferFunctionLineEdit</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>LoadTransferFunctionPopUp</receiver>
+   <slot>textChange(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>46</x>
+     <y>25</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>4</x>
+     <y>52</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ColorButton</sender>
+   <signal>clicked()</signal>
+   <receiver>LoadTransferFunctionPopUp</receiver>
+   <slot>ChooseColor()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>121</x>
+     <y>315</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>211</x>
+     <y>318</y>
     </hint>
    </hints>
   </connection>
  </connections>
  <slots>
   <slot>updateTransferFunction()</slot>
+  <slot>textChange(QString)</slot>
+  <slot>ChooseColor()</slot>
  </slots>
 </ui>

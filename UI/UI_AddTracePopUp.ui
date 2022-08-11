@@ -7,8 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>956</width>
-    <height>576</height>
+    <height>519</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>1032</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Añadir Linea</string>
@@ -23,63 +35,7 @@
    <property name="horizontalSpacing">
     <number>0</number>
    </property>
-   <item row="1" column="1" colspan="2">
-    <widget class="QRadioButton" name="BodeRadioButton">
-     <property name="text">
-      <string>Bode</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QLabel" name="TraceNameLabel">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Nombre de la curva</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="2">
-    <widget class="QLineEdit" name="TraceNameLE"/>
-   </item>
-   <item row="1" column="3" colspan="2">
-    <widget class="QRadioButton" name="SignalRadioButton">
-     <property name="text">
-      <string>Señal</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="4">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1">
-    <widget class="QLabel" name="ColorLabel">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Color</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="2" colspan="3">
+   <item row="0" column="2" colspan="5">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="spacing">
       <number>0</number>
@@ -112,100 +68,28 @@
      </item>
     </layout>
    </item>
-   <item row="3" column="1" colspan="4">
-    <widget class="QGroupBox" name="SignalGroupBox">
-     <property name="title">
-      <string>Señal</string>
+   <item row="8" column="6">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="0">
-       <widget class="QLabel" name="XAxisDataLabel">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Datos para Eje X</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="XDataCB">
-        <property name="minimumSize">
-         <size>
-          <width>200</width>
-          <height>0</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="XOpLabel">
-        <property name="text">
-         <string>Operacion</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QLineEdit" name="XOpLE"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="YAxisDataLabel">
-        <property name="text">
-         <string>Datos para Eje Y</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="YDataCB"/>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="YOpLabel">
-        <property name="text">
-         <string>Operacion</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QLineEdit" name="YOpLE"/>
-      </item>
-     </layout>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
     </widget>
    </item>
-   <item row="7" column="1">
-    <widget class="QCheckBox" name="IsMCCheckBox">
+   <item row="0" column="1">
+    <widget class="QLabel" name="Dir2FileLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
-      <string>MonteCarlo? (Solo Spice)</string>
+      <string>Direccion al archivo</string>
      </property>
     </widget>
-   </item>
-   <item row="4" column="2">
-    <widget class="QComboBox" name="TraceTypeCB"/>
-   </item>
-   <item row="5" column="2">
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QPushButton" name="ColorButton">
-       <property name="minimumSize">
-        <size>
-         <width>30</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>30</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </item>
    <item row="7" column="2" rowspan="2" colspan="2">
     <widget class="QGroupBox" name="MonteCarloGroupBox">
@@ -236,24 +120,122 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="1" colspan="4">
+   <item row="3" column="1" colspan="6">
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents_2">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>919</width>
+        <height>86</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <widget class="QGroupBox" name="SignalGroupBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Señal</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <widget class="QLabel" name="XAxisDataLabel">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Datos para Eje X</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLineEdit" name="XOpLE"/>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="XOpLabel">
+            <property name="text">
+             <string>Operacion</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="XDataCB">
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>0</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QSpinBox" name="YAxisQuantSpinBox">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>10</number>
+            </property>
+            <property name="value">
+             <number>2</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="3">
+    <widget class="QRadioButton" name="BodeRadioButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Bode</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="6">
     <widget class="QGroupBox" name="BodeGroupBox">
      <property name="title">
       <string>Bode</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
-      <item row="0" column="0">
-       <widget class="QLabel" name="FrequencyLAbel">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Frecuencia</string>
-        </property>
-       </widget>
+      <item row="0" column="3">
+       <widget class="QLineEdit" name="FreqOpLE"/>
       </item>
       <item row="0" column="1">
        <widget class="QComboBox" name="FreqDataCB">
@@ -264,16 +246,6 @@
          </size>
         </property>
        </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="XOpLabel_3">
-        <property name="text">
-         <string>Operacion</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QLineEdit" name="FreqOpLE"/>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="ModAxisLabel">
@@ -288,6 +260,65 @@
         </property>
        </widget>
       </item>
+      <item row="2" column="2">
+       <widget class="QLabel" name="YOpLabel_2">
+        <property name="text">
+         <string>Operacion</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="BodeTraceNameLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Nombre de la curva</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QLineEdit" name="PhaseOpLE"/>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="XOpLabel_2">
+        <property name="text">
+         <string>Operacion</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="BodeColorLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Color</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="PhaseDataCB"/>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="FrequencyLAbel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Frecuencia</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="ModDataCB">
         <property name="minimumSize">
@@ -298,16 +329,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="XOpLabel_2">
-        <property name="text">
-         <string>Operacion</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QLineEdit" name="ModOpLE"/>
-      </item>
       <item row="2" column="0">
        <widget class="QLabel" name="FaseAxisLabel">
         <property name="text">
@@ -315,45 +336,78 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="PhaseDataCB"/>
+      <item row="1" column="3">
+       <widget class="QLineEdit" name="ModOpLE"/>
       </item>
-      <item row="2" column="2">
-       <widget class="QLabel" name="YOpLabel_2">
+      <item row="0" column="2">
+       <widget class="QLabel" name="XOpLabel_3">
         <property name="text">
          <string>Operacion</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="3">
-       <widget class="QLineEdit" name="PhaseOpLE"/>
+      <item row="6" column="0">
+       <widget class="QLabel" name="BodeLineTypeLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Tipo de Linea</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QLineEdit" name="BodeTraceNameLE"/>
+      </item>
+      <item row="6" column="1">
+       <widget class="QComboBox" name="BodeTraceTypeCB"/>
+      </item>
+      <item row="5" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QPushButton" name="BodeColorButton">
+          <property name="minimumSize">
+           <size>
+            <width>30</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>30</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="0" column="1">
-    <widget class="QLabel" name="Dir2FileLabel">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+   <item row="7" column="1">
+    <widget class="QCheckBox" name="IsMCCheckBox">
      <property name="text">
-      <string>Direccion al archivo</string>
+      <string>MonteCarlo? (Solo Spice)</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
-    <widget class="QLabel" name="LineTypeLabel">
+   <item row="1" column="4">
+    <widget class="QRadioButton" name="SignalRadioButton">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Tipo de Linea</string>
+      <string>Señal</string>
      </property>
     </widget>
    </item>
@@ -369,7 +423,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>772</x>
-     <y>567</y>
+     <y>698</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -385,27 +439,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>772</x>
-     <y>567</y>
+     <y>698</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>ColorButton</sender>
-   <signal>clicked()</signal>
-   <receiver>AddTracePopUp</receiver>
-   <slot>ChooseColor()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>368</x>
-     <y>450</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>345</x>
-     <y>174</y>
     </hint>
    </hints>
   </connection>
@@ -433,11 +471,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>124</x>
-     <y>513</y>
+     <y>644</y>
     </hint>
     <hint type="destinationlabel">
      <x>258</x>
-     <y>540</y>
+     <y>671</y>
     </hint>
    </hints>
   </connection>
@@ -448,7 +486,7 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>118</x>
+     <x>63</x>
      <y>64</y>
     </hint>
     <hint type="destinationlabel">
@@ -458,24 +496,57 @@
    </hints>
   </connection>
   <connection>
+   <sender>YAxisQuantSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>AddTracePopUp</receiver>
+   <slot>YAxisQuantUpdate(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>911</x>
+     <y>497</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>955</x>
+     <y>278</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>BodeColorButton</sender>
+   <signal>clicked()</signal>
+   <receiver>AddTracePopUp</receiver>
+   <slot>ChooseBodeColor()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>313</x>
+     <y>242</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>602</x>
+     <y>345</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
    <sender>SignalRadioButton</sender>
    <signal>toggled(bool)</signal>
-   <receiver>SignalGroupBox</receiver>
+   <receiver>scrollArea</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>571</x>
-     <y>60</y>
+     <x>461</x>
+     <y>58</y>
     </hint>
     <hint type="destinationlabel">
-     <x>739</x>
-     <y>229</y>
+     <x>85</x>
+     <y>352</y>
     </hint>
    </hints>
   </connection>
  </connections>
  <slots>
-  <slot>ChooseColor()</slot>
+  <slot>ChooseBodeColor()</slot>
   <slot>BrowseFile()</slot>
+  <slot>YAxisQuantUpdate(int)</slot>
  </slots>
 </ui>

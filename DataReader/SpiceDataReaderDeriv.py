@@ -49,7 +49,7 @@ class SpiceDataReader(DataReader):
     def read(self) -> DataFrame:
 
         self.logger.debug("Reading trace " + self.ycolumn)
-
+        self.RawData = RawRead(self.path2data)
         if self.isMC:
             match self.data2get:
                 case "Mod":
@@ -63,7 +63,7 @@ class SpiceDataReader(DataReader):
                     dictData = {self.xcolumn: np.real(frequ)}
                     for i in range(self.step2read):
                         dictData[self.ycolumn + " step %d" % i] = self.yoperation(np.angle(
-                            self.RawData.get_trace(self.ycolumn).get_wave(i)))
+                            self.RawData.get_trace(self.ycolumn).get_wave(i), deg=True))
                 case "Signal":
                     time = np.abs(self.RawData.get_trace(self.xcolumn).get_wave(0))
                     dictData = {self.xcolumn: self.xoperation(time)}

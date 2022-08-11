@@ -8,7 +8,7 @@ from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib.widgets import Cursor
 from pandas import DataFrame
-
+import mplcursors
 from Utils import Trace
 from Scales import dBScaleClass, dBmScaleClass, OctaveScaleClass
 from DataReader.SpiceDataReaderDeriv import SpiceDataReader
@@ -28,6 +28,7 @@ class MplCanvas(FigureCanvas):
         if dBScaleClass.dBScale.name not in scale.get_scale_names():
             scale.register_scale(dBScaleClass.dBScale)
         self.fig = Figure(figsize=(width, height), dpi=dpi)
+        self.dataCursors = []
         self.axes: Axes = self.fig.add_subplot()
         self.fig.set_tight_layout(True)
         super().__init__(self.fig)
@@ -93,6 +94,7 @@ class MplCanvas(FigureCanvas):
 
     def plot(self, traces: List[Trace.Trace]):
         self.axes.clear()
+        self.dataCursors.clear()
 
         for trace in traces:
             data: DataFrame = trace.reader.read()
@@ -100,14 +102,17 @@ class MplCanvas(FigureCanvas):
             if type(trace.reader) is SpiceDataReader and trace.reader.isMonteCarlo():
                 for i in range(len(data.columns) - 1):
                     if i == 0:
-                        self.axes.plot(data.iloc[:, 0], data.iloc[:, i + 1], label=trace.tracename,
-                                       ls=trace.linetype, color=trace.color)
+                        line = self.axes.plot(data.iloc[:, 0], data.iloc[:, i + 1], label=trace.tracename,
+                                              ls=trace.linetype, color=trace.color)
                     else:
-                        self.axes.plot(data.iloc[:, 0], data.iloc[:, i + 1], ls=trace.linetype,
-                                       color=trace.color)
+                        line = self.axes.plot(data.iloc[:, 0], data.iloc[:, i + 1], ls=trace.linetype,
+                                              color=trace.color)
+
+                    self.dataCursors.append(mplcursors.cursor(line))
             else:
-                self.axes.plot(data.iloc[:, 0], data.iloc[:, 1], label=trace.tracename, ls=trace.linetype,
-                               color=trace.color)
+                line = self.axes.plot(data.iloc[:, 0], data.iloc[:, 1], label=trace.tracename, ls=trace.linetype,
+                                      color=trace.color)
+                self.dataCursors.append(mplcursors.cursor(line))
 
         self.axes.set_xscale(self.XScale)
         self.axes.set_yscale(self.YScale)
@@ -116,6 +121,11 @@ class MplCanvas(FigureCanvas):
         self.axes.set_title(self.title)
         self.axes.set_xlabel(self.XAxisTitle)
         self.axes.set_ylabel(self.YAxisTitle)
+        ylims = self.axes.get_ylim()
+        if np.abs(ylims[0] - ylims[1]) < 0.00001:
+            botylim = ylims[0] - 0.0005
+            topylim = ylims[1] + 0.0005
+            self.axes.set_ylim(botylim, topylim)
 
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()

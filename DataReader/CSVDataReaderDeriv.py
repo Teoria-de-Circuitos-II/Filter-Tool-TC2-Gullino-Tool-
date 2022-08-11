@@ -45,6 +45,7 @@ class CSVDataReader(DataReader):
             resultDF[self.xcolumn].apply(self.xoperation)
             resultDF[self.ycolumn].apply(self.yoperation)
             return resultDF
+
         except Exception:
             types, value, traceback = sys.exc_info()
             logging.error("Problema en la lectura del CSV:" + value.strerror)
