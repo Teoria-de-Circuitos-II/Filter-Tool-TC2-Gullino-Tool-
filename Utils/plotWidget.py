@@ -12,6 +12,7 @@ import mplcursors
 from Utils import Trace
 from Scales import dBScaleClass, dBmScaleClass, OctaveScaleClass
 from DataReader.SpiceDataReaderDeriv import SpiceDataReader
+from Utils.Trace import linestyle_dict
 
 scale.register_scale(dBScaleClass.dBScale)
 scale.register_scale(dBmScaleClass.dBmScale)
@@ -103,14 +104,15 @@ class MplCanvas(FigureCanvas):
                 for i in range(len(data.columns) - 1):
                     if i == 0:
                         line = self.axes.plot(data.iloc[:, 0], data.iloc[:, i + 1], label=trace.tracename,
-                                              ls=trace.linetype, color=trace.color)
+                                              ls=linestyle_dict[trace.linetype], color=trace.color)
                     else:
-                        line = self.axes.plot(data.iloc[:, 0], data.iloc[:, i + 1], ls=trace.linetype,
+                        line = self.axes.plot(data.iloc[:, 0], data.iloc[:, i + 1], ls=linestyle_dict[trace.linetype],
                                               color=trace.color)
 
                     self.dataCursors.append(mplcursors.cursor(line))
             else:
-                line = self.axes.plot(data.iloc[:, 0], data.iloc[:, 1], label=trace.tracename, ls=trace.linetype,
+                line = self.axes.plot(data.iloc[:, 0], data.iloc[:, 1], label=trace.tracename,
+                                      ls=linestyle_dict[trace.linetype],
                                       color=trace.color)
                 self.dataCursors.append(mplcursors.cursor(line))
 

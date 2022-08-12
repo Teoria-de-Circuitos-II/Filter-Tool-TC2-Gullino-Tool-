@@ -26,7 +26,7 @@ class ModTracePopUp(QtWidgets.QDialog, UI_ModTracePopUp.Ui_ModTracePopUp):
         return self.data
 
     def accept(self) -> None:
-        self.data = (self.TraceNameLE.text(), self.color.name(), linestyle_dict[self.TraceTypeCB.currentText()])
+        self.data = (self.TraceNameLE.text(), self.color.name(), self.TraceTypeCB.currentText())
         self.done(0)
         pass
 

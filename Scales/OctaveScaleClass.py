@@ -56,7 +56,7 @@ class OctaveScale(mscale.ScaleBase):
         """
         fmt = FuncFormatter(
             lambda x, pos=None: f"{ma.log2(x):.2f}")
-        axis.set(major_locator=ticker.LogLocator(),
+        axis.set(major_locator=ticker.LogLocator(subs=(0.5, 1, 0.25, 0.125)),
                  major_formatter=fmt, minor_formatter=fmt)
 
     def limit_range_for_scale(self, vmin, vmax, minpos):

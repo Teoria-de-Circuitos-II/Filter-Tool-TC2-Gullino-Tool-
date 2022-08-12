@@ -26,7 +26,7 @@ class LoadTransferFunctionPopUp(QtWidgets.QDialog, UI_LoadTransferFunctionPopUp.
         self.checked = False
         self.TexBox = MPLTexText(self.TexGroupBox)
         self.reader: TFDataReader = None
-        self.traces: Tuple[Trace, Trace] = ()
+        self.traces: Tuple[Trace, Trace] = (None, None)
 
     def exec(self) -> Tuple[Trace, Trace]:
         super().exec()

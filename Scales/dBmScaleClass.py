@@ -56,7 +56,7 @@ class dBmScale(mscale.ScaleBase):
         """
         fmt = FuncFormatter(
             lambda x, pos=None: f"{20 * ma.log10(x) + 60:.2f} dBm")
-        axis.set(major_locator=ticker.LogLocator(),
+        axis.set(major_locator=ticker.LogLocator(subs=(0.5, 1, 0.25, 0.125)),
                  major_formatter=fmt, minor_formatter=fmt)
 
     def limit_range_for_scale(self, vmin, vmax, minpos):
