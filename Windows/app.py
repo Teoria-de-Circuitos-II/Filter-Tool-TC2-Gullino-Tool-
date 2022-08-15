@@ -33,6 +33,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tfTrace = []
         self.FontFamilyComboBox.addItems(sorted(font_manager.font_family_aliases))
         self.FontFamilyComboBox.setCurrentText('serif')
+        self.FontSizeSpinbox.setValue(15)
         self.ModPlot = MplCanvas(self.ModuloBox)
         self.ModPlot.changeXScales(scale.LogScale.name)
         self.ModPlot.changeYScales('db')
@@ -221,7 +222,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 return
             trace2use = None
             for trace in self.tfTrace:
-                if trace.tracename == self.TransFuncComboBox.currentText():
+                if str(trace) == self.TransFuncComboBox.currentText():
                     trace2use = trace
             tf = control.TransferFunction(trace2use.reader.transFunc.num, trace2use.reader.transFunc.den)
             control.pzmap(tf, plot=True)

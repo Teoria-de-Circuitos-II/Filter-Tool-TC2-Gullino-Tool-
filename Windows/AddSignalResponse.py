@@ -62,13 +62,15 @@ class AddSignalResponse(QtWidgets.QDialog, UI.UI_AddSignalResponse.Ui_AddSignalR
                 inputpoints = [1 for i in time]
                 outtime = time
             case 'Pulso periodico':
-                time = np.linspace(0, periods_quant / self.FInputCosDB.value(), int(1000 * periods_quant))
-                inputpoints = functions_dict['Pulso periodico'](self.FInputCosDB.value(), self.AInputCosDB.value(),
+                time = np.linspace(0, periods_quant / self.FInputTriagSqDB.value(), int(1000 * periods_quant))
+                inputpoints = functions_dict['Pulso periodico'](self.FInputTriagSqDB.value(),
+                                                                self.AInputTriagSqDB.value(),
                                                                 time, self.DCInputTriagSqDB.value())
                 outtime, outputpoints, xoutpoints = signal.lsim(self.transFunc, inputpoints, time)
             case 'Triangular periodica':
-                time = np.linspace(0, periods_quant / self.FInputCosDB.value(), int(1000 * periods_quant))
-                inputpoints = functions_dict['Triangular periodica'](self.FInputCosDB.value(), self.AInputCosDB.value(),
+                time = np.linspace(0, periods_quant / self.FInputTriagSqDB.value(), int(1000 * periods_quant))
+                inputpoints = functions_dict['Triangular periodica'](self.FInputTriagSqDB.value(),
+                                                                     self.AInputTriagSqDB.value(),
                                                                      time, self.DCInputTriagSqDB.value())
                 outtime, outputpoints, xoutpoints = signal.lsim(self.transFunc, inputpoints, time)
             case 'Impulso':
@@ -79,9 +81,9 @@ class AddSignalResponse(QtWidgets.QDialog, UI.UI_AddSignalResponse.Ui_AddSignalR
                 time = [0, 0, 1/maxtime, 0, -1/maxtime, 0, 0]
 
             case 'Funcion arbitraria':
-                time = np.linspace(0, 1 / self.FInputCosDB.value(), 1000)
+                time = np.linspace(0, 1 / self.FInputDB.value(), 1000)
                 inputpoints = functions_dict['Funcion arbitraria'](self.FuncInputTE.toPlainText(), time,
-                                                                   self.FInputCosDB.value())
+                                                                   self.FInputDB.value())
                 if periods_quant.is_integer():  # Cantidad entera de periodos
                     inputpoints = np.tile(inputpoints, int(periods_quant))
                 else:  # Cantidad real de periodos
@@ -89,7 +91,7 @@ class AddSignalResponse(QtWidgets.QDialog, UI.UI_AddSignalResponse.Ui_AddSignalR
                     indexlimit = int(1000 * periods_quant)
                     inputpoints = inputpoints[0:indexlimit]
 
-                time = np.linspace(0, periods_quant / self.FInputCosDB.value(), int(1000 * periods_quant))
+                time = np.linspace(0, periods_quant / self.FInputDB.value(), int(1000 * periods_quant))
                 outtime, outputpoints, xoutpoints = signal.lsim(self.transFunc, inputpoints, time)
 
         logging.debug(f"Largo de input: {len(inputpoints)}")

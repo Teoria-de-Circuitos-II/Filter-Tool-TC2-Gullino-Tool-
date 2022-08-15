@@ -31,6 +31,7 @@ class TFDataReader(DataReader):
     def initTransferFunction(self, data2get: str):
         self.data2get = data2get
         self.expr = sp.simplify(self.expr)
+        self.expr = self.expr.evalf()
         self.expr = sp.fraction(self.expr)
 
         if self.s not in self.expr[0].free_symbols:

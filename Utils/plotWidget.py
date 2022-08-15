@@ -1,7 +1,7 @@
 from typing import List
 from PyQt6 import QtWidgets
 import numpy as np
-from matplotlib import scale
+from matplotlib import scale, rcParams
 from matplotlib.axes import Axes
 from matplotlib.backends.backend_qt import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.backends.backend_qtagg import FigureCanvas
@@ -120,9 +120,9 @@ class MplCanvas(FigureCanvas):
         self.axes.set_yscale(self.YScale)
         self.axes.grid(which='both')
         self.axes.legend()
-        self.axes.set_title(self.title)
-        self.axes.set_xlabel(self.XAxisTitle)
-        self.axes.set_ylabel(self.YAxisTitle)
+        self.axes.set_title(self.title, size=rcParams['font.size'], fontfamily=rcParams['font.family'])
+        self.axes.set_xlabel(self.XAxisTitle, size=rcParams['font.size'], fontfamily=rcParams['font.family'])
+        self.axes.set_ylabel(self.YAxisTitle, size=rcParams['font.size'], fontfamily=rcParams['font.family'])
         ylims = self.axes.get_ylim()
         if np.abs(ylims[0] - ylims[1]) < 0.00001:
             botylim = ylims[0] - 0.0005
