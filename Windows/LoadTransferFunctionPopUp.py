@@ -8,6 +8,7 @@ from DataReader.TFDataReaderDeriv import TFDataReader
 from Utils.Trace import Trace, linestyle_dict, TraceType
 from UI import UI_LoadTransferFunctionPopUp
 import matplotlib
+import matplotlib.scale
 import matplotlib.pyplot as plt
 
 alphabet = "abcdfghjklmnoqrtuvwxyz"
