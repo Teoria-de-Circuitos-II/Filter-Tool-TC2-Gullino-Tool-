@@ -2,7 +2,7 @@ from typing import Union, Tuple, List
 
 import pandas as pd
 from PyQt6 import QtGui, QtWidgets, QtCore
-from Utils.Trace import linestyle_dict, Trace, TraceType
+from Utils.Trace import markers_dict, linestyle_dict, Trace, TraceType
 import sympy as sp
 from sympy.parsing.sympy_parser import parse_expr, T
 from UI import UI_AddTracePopUp
@@ -37,6 +37,10 @@ class YAxisDataWidget:
         self.TraceLineTypeLabel = QtWidgets.QLabel("Tipo de Linea:", self.GroupBox)
         self.TraceLineTypeCB = QtWidgets.QComboBox(self.GroupBox)
         self.TraceLineTypeCB.addItems(linestyle_dict.keys())
+        self.TraceMarkerLabel = QtWidgets.QLabel("Marcador:", self.GroupBox)
+        self.TraceMarkerCB = QtWidgets.QComboBox(self.GroupBox)
+        self.TraceMarkerCB.addItems(markers_dict.keys())
+        self.TraceMarkerCB.setCurrentText('nothing')
 
         self.GriLayout.addWidget(self.YDataLabel, 0, 0)
         self.GriLayout.addWidget(self.YDataCB, 0, 1)
@@ -46,8 +50,11 @@ class YAxisDataWidget:
         self.GriLayout.addWidget(self.TraceNameLE, 1, 1)
         self.GriLayout.addWidget(self.TraceColorLabel, 1, 2)
         self.GriLayout.addWidget(self.TraceColorButton, 1, 3)
-        self.GriLayout.addWidget(self.TraceLineTypeLabel, 1, 4)
-        self.GriLayout.addWidget(self.TraceLineTypeCB, 1, 5)
+        self.GriLayout.addWidget(self.TraceLineTypeLabel, 2, 0)
+        self.GriLayout.addWidget(self.TraceLineTypeCB, 2, 1)
+        self.GriLayout.addWidget(self.TraceMarkerLabel, 2, 2)
+        self.GriLayout.addWidget(self.TraceMarkerCB, 2, 3)
+
         self.TraceColorButton.clicked.connect(lambda: YAxisDataWidget.ChooseColor(self))
         palette = self.TraceColorButton.palette()
         palette.setColor(QtGui.QPalette.ColorRole.Button, self.color)
@@ -60,7 +67,7 @@ class YAxisDataWidget:
         else:
             yop = getLambdaFromOperation(self.YOpLE.text())
         return self.YDataCB.currentText(), self.TraceNameLE.text(), self.color.name(), \
-               linestyle_dict[self.TraceLineTypeCB.currentText()], yop
+               self.TraceLineTypeCB.currentText(), yop, self.TraceMarkerCB.currentText()
 
     def updateOptions(self, CBdata: List[str]):
         self.YDataCB.clear()
@@ -78,6 +85,8 @@ class AddTracePopUp(QtWidgets.QDialog, UI_AddTracePopUp.Ui_AddTracePopUp):
         super().__init__()
         self.setupUi(self)
         self.BodeTraceTypeCB.addItems(linestyle_dict.keys())
+        self.MarkersCB.addItems(markers_dict.keys())
+        self.MarkersCB.setCurrentText('nothing')
         self.MonteCarloGroupBox.setVisible(False)
         self.scrollArea.setVisible(False)
         self.color = QtGui.QColor("#FF8C00")
@@ -152,13 +161,13 @@ class AddTracePopUp(QtWidgets.QDialog, UI_AddTracePopUp.Ui_AddTracePopUp):
                                            freqop, phaseop)
 
             modtrace = Trace(self.BodeTraceNameLE.text(), self.reader, self.color.name(),
-                             linestyle_dict[self.BodeTraceTypeCB.currentText()], TraceType.Module)
+                             self.BodeTraceTypeCB.currentText(), self.MarkersCB.currentText(), TraceType.Module)
 
             if phasereader is None:
                 phasereader = self.reader
 
             phasetrace = Trace(self.BodeTraceNameLE.text(), phasereader, self.color.name(),
-                               linestyle_dict[self.BodeTraceTypeCB.currentText()], TraceType.Phase)
+                               self.BodeTraceTypeCB.currentText(), self.MarkersCB.currentText(), TraceType.Phase)
 
             self.traces = [modtrace, phasetrace]
 
@@ -176,7 +185,7 @@ class AddTracePopUp(QtWidgets.QDialog, UI_AddTracePopUp.Ui_AddTracePopUp):
                         reader.config("Signal", self.XDataCB.currentText(), data[0],
                                       xop, data[4])
                         trace = Trace(data[1], reader, data[2],
-                                      data[3], TraceType.Signal)
+                                      data[3], data[5], TraceType.Signal)
                         self.traces.append(trace)
 
                 case SpiceDataReader():
@@ -189,7 +198,7 @@ class AddTracePopUp(QtWidgets.QDialog, UI_AddTracePopUp.Ui_AddTracePopUp):
                                           xop, data[4], self.StepQuantSpinBox.value())
 
                             trace = Trace(data[1], reader, data[2],
-                                          data[3], TraceType.Signal)
+                                          data[3], data[5], TraceType.Signal)
 
                             self.traces.append(trace)
                     else:
@@ -200,7 +209,7 @@ class AddTracePopUp(QtWidgets.QDialog, UI_AddTracePopUp.Ui_AddTracePopUp):
                                           xop, data[4])
 
                             trace = Trace(data[1], reader, data[2],
-                                          data[3], TraceType.Signal)
+                                          data[3], data[5], TraceType.Signal)
 
                             self.traces.append(trace)
 

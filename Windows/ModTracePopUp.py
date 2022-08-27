@@ -1,16 +1,18 @@
 from PyQt6 import QtGui, QtWidgets
-from Utils.Trace import linestyle_dict
+from Utils.Trace import linestyle_dict, markers_dict
 from typing import Tuple
 from UI import UI_ModTracePopUp
 
 
 class ModTracePopUp(QtWidgets.QDialog, UI_ModTracePopUp.Ui_ModTracePopUp):
-    def __init__(self, name, color, linetype):
+    def __init__(self, name, color, marker, linetype):
         super().__init__()
         self.setupUi(self)
 
         self.TraceTypeCB.addItems(linestyle_dict.keys())
         self.TraceTypeCB.setCurrentText(linetype)
+        self.MarkersCB.addItems(markers_dict.keys())
+        self.MarkersCB.setCurrentText(marker)
 
         self.TraceNameLE.setText(name)
 
@@ -26,7 +28,8 @@ class ModTracePopUp(QtWidgets.QDialog, UI_ModTracePopUp.Ui_ModTracePopUp):
         return self.data
 
     def accept(self) -> None:
-        self.data = (self.TraceNameLE.text(), self.color.name(), self.TraceTypeCB.currentText())
+        self.data = (self.TraceNameLE.text(), self.color.name(), self.TraceTypeCB.currentText(),
+                     self.MarkersCB.currentText())
         self.done(0)
         pass
 

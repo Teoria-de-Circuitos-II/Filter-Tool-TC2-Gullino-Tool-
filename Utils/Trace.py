@@ -1,5 +1,9 @@
 import enum
 from dataclasses import dataclass
+
+from matplotlib.lines import Line2D, lineMarkers
+from sympy.testing.runtests import split_list
+
 from DataReader.DataReaderBase import DataReader
 
 linestyle_dict = {
@@ -7,7 +11,7 @@ linestyle_dict = {
     'dotted': 'dotted',  # Same as (0, (1, 1)) or ':'
     'dashed': 'dashed',  # Same as '--'
     'dashdot': 'dashdot',  # Same as '-.'
-
+    'None': "",
     'loosely dotted': (0, (1, 10)),
     'densely dotted': (0, (1, 1)),
 
@@ -22,6 +26,8 @@ linestyle_dict = {
     'loosely dashdotdotted': (0, (3, 10, 1, 10, 1, 10)),
     'densely dashdotdotted': (0, (3, 1, 1, 1, 1, 1))}
 
+markers_dict = {v: k for k, v in lineMarkers.items()}
+
 
 class TraceType(enum.Enum):
     Module = "(Modulo)"
@@ -35,6 +41,7 @@ class Trace:
     reader: DataReader
     color: str
     linetype: str
+    marker: str
     type: TraceType
 
     def __repr__(self):

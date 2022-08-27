@@ -11,7 +11,7 @@ from sympy.parsing.sympy_parser import parse_expr, T
 import UI.UI_AddSignalResponse
 from PyQt6 import QtGui, QtWidgets
 from DataReader.DataReaderBase import DataReader
-from Utils.Trace import Trace, linestyle_dict, TraceType
+from Utils.Trace import Trace, linestyle_dict, TraceType, markers_dict
 
 functions_dict = {'Coseno': lambda f, A, t: A * np.cos(t * 2 * np.pi * f),
                   'Escalon': lambda tf: signal.step(tf, N=2000),
@@ -100,9 +100,9 @@ class AddSignalResponse(QtWidgets.QDialog, UI.UI_AddSignalResponse.Ui_AddSignalR
         inreader.setData(time, inputpoints)
         outreader.setData(outtime, outputpoints)
         intrace = Trace(self.tracename + "Input", inreader, self.color.name(),
-                        linestyle_dict[self.TraceTypeCB.currentText()], TraceType.Signal)
+                        self.TraceTypeCB.currentText(), 'nothing', TraceType.Signal)
         outtrace = Trace(self.tracename + "Output", outreader, self.color.name(),
-                         linestyle_dict[self.TraceTypeCB.currentText()], TraceType.Signal)
+                         self.TraceTypeCB.currentText(), 'nothing', TraceType.Signal)
         self.trace = (intrace, outtrace)
         self.done(0)
 

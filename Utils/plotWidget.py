@@ -1,3 +1,4 @@
+import logging
 from typing import List
 from PyQt6 import QtWidgets
 import numpy as np
@@ -12,7 +13,7 @@ import mplcursors
 from Utils import Trace
 from Scales import dBScaleClass, dBmScaleClass, OctaveScaleClass
 from DataReader.SpiceDataReaderDeriv import SpiceDataReader
-from Utils.Trace import linestyle_dict
+from Utils.Trace import linestyle_dict, markers_dict
 
 scale.register_scale(dBScaleClass.dBScale)
 scale.register_scale(dBmScaleClass.dBmScale)
@@ -99,21 +100,23 @@ class MplCanvas(FigureCanvas):
 
         for trace in traces:
             data: DataFrame = trace.reader.read()
-            print(data)
+            logging.debug(data)
+
             if type(trace.reader) is SpiceDataReader and trace.reader.isMonteCarlo():
                 for i in range(len(data.columns) - 1):
                     if i == 0:
                         line = self.axes.plot(data.iloc[:, 0], data.iloc[:, i + 1], label=trace.tracename,
-                                              ls=linestyle_dict[trace.linetype], color=trace.color)
+                                              ls=linestyle_dict[trace.linetype], color=trace.color,
+                                              marker=markers_dict[trace.marker])
                     else:
                         line = self.axes.plot(data.iloc[:, 0], data.iloc[:, i + 1], ls=linestyle_dict[trace.linetype],
-                                              color=trace.color)
+                                              color=trace.color, marker=markers_dict[trace.marker])
 
                     self.dataCursors.append(mplcursors.cursor(line))
             else:
                 line = self.axes.plot(data.iloc[:, 0], data.iloc[:, 1], label=trace.tracename,
                                       ls=linestyle_dict[trace.linetype],
-                                      color=trace.color)
+                                      color=trace.color, marker=markers_dict[trace.marker])
                 self.dataCursors.append(mplcursors.cursor(line))
 
         self.axes.set_xscale(self.XScale)

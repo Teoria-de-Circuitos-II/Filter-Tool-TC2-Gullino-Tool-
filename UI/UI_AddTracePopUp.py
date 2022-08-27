@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_AddTracePopUp(object):
     def setupUi(self, AddTracePopUp):
         AddTracePopUp.setObjectName("AddTracePopUp")
-        AddTracePopUp.resize(956, 519)
+        AddTracePopUp.resize(985, 562)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -72,7 +72,7 @@ class Ui_AddTracePopUp(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 919, 86))
+        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 969, 126))
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
         self.gridLayout_5 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_2)
         self.gridLayout_5.setObjectName("gridLayout_5")
@@ -214,6 +214,12 @@ class Ui_AddTracePopUp(object):
         self.BodeColorButton.setObjectName("BodeColorButton")
         self.horizontalLayout_2.addWidget(self.BodeColorButton)
         self.gridLayout_4.addLayout(self.horizontalLayout_2, 5, 1, 1, 1)
+        self.MarkerLabel = QtWidgets.QLabel(self.BodeGroupBox)
+        self.MarkerLabel.setObjectName("MarkerLabel")
+        self.gridLayout_4.addWidget(self.MarkerLabel, 6, 2, 1, 1)
+        self.MarkersCB = QtWidgets.QComboBox(self.BodeGroupBox)
+        self.MarkersCB.setObjectName("MarkersCB")
+        self.gridLayout_4.addWidget(self.MarkersCB, 6, 3, 1, 1)
         self.gridLayout_2.addWidget(self.BodeGroupBox, 2, 1, 1, 6)
         self.IsMCCheckBox = QtWidgets.QCheckBox(AddTracePopUp)
         self.IsMCCheckBox.setObjectName("IsMCCheckBox")
@@ -259,6 +265,7 @@ class Ui_AddTracePopUp(object):
         self.FaseAxisLabel.setText(_translate("AddTracePopUp", "Fase"))
         self.XOpLabel_3.setText(_translate("AddTracePopUp", "Operacion"))
         self.BodeLineTypeLabel.setText(_translate("AddTracePopUp", "Tipo de Linea"))
+        self.MarkerLabel.setText(_translate("AddTracePopUp", "Marcadores"))
         self.IsMCCheckBox.setText(_translate("AddTracePopUp", "MonteCarlo? (Solo Spice)"))
         self.SignalRadioButton.setText(_translate("AddTracePopUp", "Señal"))
 

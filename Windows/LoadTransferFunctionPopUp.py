@@ -5,7 +5,7 @@ from PyQt6 import QtWidgets, QtGui
 from Utils.MPLTexTextClass import MPLTexText
 import sympy as sp
 from DataReader.TFDataReaderDeriv import TFDataReader
-from Utils.Trace import Trace, linestyle_dict, TraceType
+from Utils.Trace import Trace, linestyle_dict, TraceType, markers_dict
 from UI import UI_LoadTransferFunctionPopUp
 import matplotlib
 import matplotlib.scale
@@ -42,9 +42,9 @@ class LoadTransferFunctionPopUp(QtWidgets.QDialog, UI_LoadTransferFunctionPopUp.
         ModReader.initTransferFunction('Mod')
         PhaseReader.initTransferFunction('Phase')
         self.traces = (Trace(self.TraceNameLE.text(), ModReader, self.color.name(),
-                             linestyle_dict[self.LineTypeCB.currentText()], TraceType.Module),
+                             self.LineTypeCB.currentText(), 'nothing', TraceType.Module),
                        Trace(self.TraceNameLE.text(), PhaseReader, self.color.name(),
-                             linestyle_dict[self.LineTypeCB.currentText()], TraceType.Phase))
+                             self.LineTypeCB.currentText(), 'nothing', TraceType.Phase))
         self.done(0)
         pass
 

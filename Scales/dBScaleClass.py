@@ -5,6 +5,8 @@ from matplotlib import transforms as mtransforms
 from matplotlib.ticker import FuncFormatter
 from matplotlib import ticker
 
+from Scales.dBLocator import dBLocator
+
 
 class dBScale(mscale.ScaleBase):
     """
@@ -56,10 +58,9 @@ class dBScale(mscale.ScaleBase):
         """
         fmt = FuncFormatter(
             lambda x, pos=None: f"{20*ma.log10(x):.1f} dB")
-        fmt2 = FuncFormatter(
-            lambda x, pos=None: f"{20*ma.log10(x):.1f} dB")
-        axis.set(major_locator=ticker.LogLocator(subs=[np.sqrt(10), 1], numticks=5),
-                 major_formatter=fmt, minor_formatter=fmt2)
+        locator = dBLocator()
+        axis.set(major_locator=locator,
+                 major_formatter=fmt, minor_formatter=fmt)
 
     def limit_range_for_scale(self, vmin, vmax, minpos):
         """

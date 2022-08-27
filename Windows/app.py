@@ -37,12 +37,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.ModPlot = MplCanvas(self.ModuloBox)
         self.ModPlot.changeXScales(scale.LogScale.name)
         self.ModPlot.changeYScales('db')
+        self.ModPlot.changeXAxisTitle("$Frecuencia [Hz]$")
+        self.ModPlot.changeYAxisTitle("$Ganancia [dB]$")
         self.PhasePlot = MplCanvas(self.PhaseBox)
         self.PhasePlot.changeXScales(scale.LogScale.name)
         self.PhasePlot.changeYScales(scale.LinearScale.name)
+        self.PhasePlot.changeXAxisTitle("$Frecuencia [Hz]$")
+        self.PhasePlot.changeYAxisTitle("$Grados [\\circ]$")
         self.SignalPlot = MplCanvas(self.RespuestaBox)
         self.SignalPlot.changeXScales(scale.LinearScale.name)
         self.SignalPlot.changeYScales(scale.LinearScale.name)
+        self.SignalPlot.changeXAxisTitle("$Tiempo [s]$")
+        self.SignalPlot.changeYAxisTitle("$Tension [V]$")
 
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(resource_path("info.png")))
@@ -83,7 +89,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         try:
             traceindex = self.TracesListBox.indexFromItem(traceitem)
             selectedtrace = self.traceslist[traceindex.row()]
-            popup = ModTracePopUp(selectedtrace.tracename, selectedtrace.color, selectedtrace.linetype)
+            popup = ModTracePopUp(selectedtrace.tracename, selectedtrace.color, selectedtrace.marker,
+                                  selectedtrace.linetype)
             update = popup.exec()
             for i in range(len(update)):
                 if update[i] != "":
@@ -105,6 +112,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
                         case 2:
                             selectedtrace.linetype = update[2]
+                        case 3:
+                            selectedtrace.marker = update[3]
 
         except:
             types, values, traces = sys.exc_info()
@@ -183,7 +192,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         except:
             types, values, traces = sys.exc_info()
             logging.error(values)
-            QtWidgets.QMessageBox.critical(self, "Error", f"Error: Problemas al agregar funcion transferencia. \n {values}")
+            QtWidgets.QMessageBox.critical(self, "Error",
+                                           f"Error: Problemas al agregar funcion transferencia. \n {values}")
 
     def addResponse2TF(self):
         try:

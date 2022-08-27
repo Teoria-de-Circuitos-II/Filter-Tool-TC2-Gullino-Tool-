@@ -42,8 +42,8 @@ class CSVDataReader(DataReader):
         try:
             resultDF = pd.read_csv(self.path2data, engine='python', skiprows=[1], header=0,
                                    usecols=[self.xcolumn, self.ycolumn], sep=self.separator)
-            resultDF[self.xcolumn].apply(self.xoperation)
-            resultDF[self.ycolumn].apply(self.yoperation)
+            resultDF[self.xcolumn] = resultDF[self.xcolumn].apply(self.xoperation)
+            resultDF[self.ycolumn] = resultDF[self.ycolumn].apply(self.yoperation)
             return resultDF
 
         except Exception:
