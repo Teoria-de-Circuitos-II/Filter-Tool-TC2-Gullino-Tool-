@@ -54,6 +54,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         icon.addPixmap(QtGui.QPixmap(resource_path("info.png")))
         self.InfoButton.setIcon(icon)
         self.InfoButton.setIconSize(QtCore.QSize(30, 30))
+        self.Plot()
 
     def Plot(self):
         ModTraces = []

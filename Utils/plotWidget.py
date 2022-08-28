@@ -1,5 +1,7 @@
 import logging
+import os.path
 from typing import List
+import tikzplotlib as mpl2tikz
 from PyQt6 import QtWidgets
 import numpy as np
 from matplotlib import scale, rcParams
@@ -20,8 +22,6 @@ scale.register_scale(dBmScaleClass.dBmScale)
 scale.register_scale(OctaveScaleClass.OctaveScale)
 
 usable_scales = ['db', 'linear', 'log', 'dbm', 'octave']
-NavigationToolbar.toolitems = [element for i, element in enumerate(NavigationToolbar.toolitems) if
-                               i not in [1, 2, 3, 6, 7, 8]]
 
 
 class MplCanvas(FigureCanvas):
@@ -50,7 +50,7 @@ class MplCanvas(FigureCanvas):
         self.XScaleComboBox.addItems(usable_scales)
         self.YScaleComboBox.addItems(usable_scales)
 
-        self.navToolBar = NavigationToolbar(self, parent=parent)
+        self.navToolBar = NavToolBar(self, parent)
         self.title = ""
         self.XAxisTitle = ''
         self.YAxisTitle = ''
@@ -134,6 +134,50 @@ class MplCanvas(FigureCanvas):
 
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
+
+
+class NavToolBar(NavigationToolbar):
+    def __init__(self, canvas, parent, *args, **kargs):
+        self.toolitems = [element for i, element in enumerate(NavigationToolbar.toolitems) if
+         i not in [1, 2, 3, 6, 7, 8]]
+        self.toolitems.append(('Tex', 'Save as latex', 'None',
+                                              'saveLatex'))
+        super().__init__(canvas, parent, *args, **kargs)
+
+    def saveLatex(self):
+        path2dir = QtWidgets.QFileDialog.getSaveFileName(filter="Tex File (*.tex)")
+        if path2dir[0] == '':
+            return
+        path2dir, filename = os.path.split(path2dir[0])
+        filenameNoExt, extension = os.path.splitext(filename)
+        if extension == '':
+            filename = filename + ".tex"
+        mpl2tikz.clean_figure(self.canvas.figure, target_resolution=200)
+        tikztext: str = mpl2tikz.get_tikz_code(filepath=f"{path2dir}/{filename}", externalize_tables=True,
+                                          figure=self.canvas.figure, dpi=200, float_format=".3E")
+
+        transform = self.canvas.axes.get_xscale()
+        xscaletype = scale._scale_mapping[transform]
+
+        transform = self.canvas.axes.get_yscale()
+        yscaletype = scale._scale_mapping[transform]
+        if xscaletype == 'db' or xscaletype == 'dbm':
+            pos = tikztext.find("\\begin{axis}[")
+            tikztext = tikztext[:pos] + "\n log basis x=10, xmode=log, \n" + tikztext[pos:]
+        elif xscaletype == 'octave':
+            pos = tikztext.find("\\begin{axis}[")
+            tikztext = tikztext[:pos] + "\n log basis x=2, xmode=log, \n" + tikztext[pos:]
+
+        if yscaletype == 'db' or yscaletype == 'dbm':
+            pos = tikztext.find("\\begin{axis}[")
+            tikztext = tikztext[:pos] + "\n log basis y=10, ymode=log, \n" + tikztext[pos:]
+        elif yscaletype == 'octave':
+            pos = tikztext.find("\\begin{axis}[")
+            tikztext = tikztext[:pos] + "\n log basis y=2, ymode=log, \n" + tikztext[pos:]
+
+        tikztext = tikztext.replace("{opts_str}", "[]")
+        with open(f"{path2dir}/{filename}", "w") as f:
+            f.write(tikztext)
 
 
 def make_format(current, other):
