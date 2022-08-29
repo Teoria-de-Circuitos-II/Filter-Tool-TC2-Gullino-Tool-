@@ -154,7 +154,8 @@ class NavToolBar(NavigationToolbar):
             filename = filename + ".tex"
         mpl2tikz.clean_figure(self.canvas.figure, target_resolution=200)
         tikztext: str = mpl2tikz.get_tikz_code(filepath=f"{path2dir}/{filename}", externalize_tables=True,
-                                          figure=self.canvas.figure, dpi=200, float_format=".3E")
+                                               figure=self.canvas.figure, dpi=200, float_format=".3E",
+                                               externals_search_path=f"{{Data/{filenameNoExt}/, Data/}}")
 
         transform = self.canvas.axes.get_xscale()
         xscaletype = scale._scale_mapping[transform]
@@ -175,7 +176,7 @@ class NavToolBar(NavigationToolbar):
             pos = tikztext.find("\\begin{axis}[")
             tikztext = tikztext[:pos] + "\n log basis y=2, ymode=log, \n" + tikztext[pos:]
 
-        tikztext = tikztext.replace("{opts_str}", "[]")
+        tikztext = tikztext.replace("{opts_str}", f"[search path={{Data/{filenameNoExt}/, Data/}}]")
         with open(f"{path2dir}/{filename}", "w") as f:
             f.write(tikztext)
 
