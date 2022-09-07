@@ -82,7 +82,7 @@ class SpiceDataReader(DataReader):
                 case "Phase":
                     frequ = self.RawData.get_trace('frequency').get_wave()
                     dictData = {'Frequency': self.xoperation(np.real(frequ)), self.ycolumn: self.yoperation(np.angle(
-                        self.RawData.get_trace(self.ycolumn).get_wave()))}
+                        self.RawData.get_trace(self.ycolumn).get_wave(), deg=True))}
                 case "Signal":
                     time = self.RawData.get_trace('time').get_wave()
                     dictData = {'Time': np.abs(self.xoperation(time)),

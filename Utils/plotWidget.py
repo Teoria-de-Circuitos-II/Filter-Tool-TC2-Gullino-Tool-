@@ -12,6 +12,8 @@ from matplotlib.figure import Figure
 from matplotlib.widgets import Cursor
 from pandas import DataFrame
 import mplcursors
+
+from DataReader.CSVDataReaderDeriv import CSVDataReader
 from Utils import Trace
 from Scales import dBScaleClass, dBmScaleClass, OctaveScaleClass
 from DataReader.SpiceDataReaderDeriv import SpiceDataReader
@@ -101,8 +103,8 @@ class MplCanvas(FigureCanvas):
         for trace in traces:
             data: DataFrame = trace.reader.read()
             logging.debug(data)
-
-            if type(trace.reader) is SpiceDataReader and trace.reader.isMonteCarlo():
+            reader = trace.reader
+            if isinstance(reader, SpiceDataReader) and trace.reader.isMonteCarlo():
                 for i in range(len(data.columns) - 1):
                     if i == 0:
                         line = self.axes.plot(data.iloc[:, 0], data.iloc[:, i + 1], label=trace.tracename,
@@ -113,6 +115,11 @@ class MplCanvas(FigureCanvas):
                                               color=trace.color, marker=markers_dict[trace.marker])
 
                     self.dataCursors.append(mplcursors.cursor(line))
+            elif isinstance(reader, CSVDataReader):
+                line = self.axes.plot(data[reader.xcolumn], data[reader.ycolumn], label=trace.tracename,
+                                      ls=linestyle_dict[trace.linetype],
+                                      color=trace.color, marker=markers_dict[trace.marker])
+                self.dataCursors.append(mplcursors.cursor(line))
             else:
                 line = self.axes.plot(data.iloc[:, 0], data.iloc[:, 1], label=trace.tracename,
                                       ls=linestyle_dict[trace.linetype],
