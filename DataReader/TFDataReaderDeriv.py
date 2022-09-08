@@ -17,6 +17,7 @@ class TFDataReader(DataReader):
         super().__init__()
         self.data2get = 'Mod'
         self.transFunc: signal.TransferFunction = None
+        self.strexpr = tfstr
         self.s = sp.Symbol('s')  # Variable de expresion
         self.expr = parse_expr(tfstr, local_dict={'s': self.s, 'S': self.s}, transformations=T[:])
         self.symbolslist = self.expr.free_symbols
