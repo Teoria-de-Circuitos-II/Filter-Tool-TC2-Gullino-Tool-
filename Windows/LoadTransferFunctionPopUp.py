@@ -4,7 +4,7 @@ from typing import Tuple
 from PyQt6 import QtWidgets, QtGui
 from Utils.MPLTexTextClass import MPLTexText
 import sympy as sp
-from DataReader.TFDataReaderDeriv import TFDataReader
+from DataReader.TFDataReaderDeriv import TFDataReader, multipliers_dict
 from Utils.Trace import Trace, linestyle_dict, TraceType, markers_dict
 from UI import UI_LoadTransferFunctionPopUp
 import matplotlib
@@ -18,6 +18,12 @@ class LoadTransferFunctionPopUp(QtWidgets.QDialog, UI_LoadTransferFunctionPopUp.
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.StartFreqMultCB.addItems(multipliers_dict.keys())
+        self.StopFreqMultCB.addItems(multipliers_dict.keys())
+        self.StartFreqMultCB.setCurrentText('Hz')
+        self.StopFreqMultCB.setCurrentText('MHz')
+        self.StartDSB.setValue(10)
+        self.StopDSB.setValue(1)
         self.color = QtGui.QColor("#FF8C00")
         palette = self.ColorButton.palette()
         palette.setColor(QtGui.QPalette.ColorRole.Button, self.color)
@@ -37,14 +43,22 @@ class LoadTransferFunctionPopUp(QtWidgets.QDialog, UI_LoadTransferFunctionPopUp.
         if not self.checked:
             QtWidgets.QMessageBox.warning(self, "Advertencia", f"Por favor darle al boton Check")
             return
-        ModReader = TFDataReader(self.lastText)
-        PhaseReader = TFDataReader(self.lastText)
-        ModReader.initTransferFunction('Mod')
-        PhaseReader.initTransferFunction('Phase')
-        self.traces = (Trace(self.TraceNameLE.text(), ModReader, self.color.name(),
-                             self.LineTypeCB.currentText(), 'nothing', TraceType.Module),
-                       Trace(self.TraceNameLE.text(), PhaseReader, self.color.name(),
-                             self.LineTypeCB.currentText(), 'nothing', TraceType.Phase))
+        try:
+            ModReader = TFDataReader(self.lastText)
+            PhaseReader = TFDataReader(self.lastText)
+            ModReader.initTransferFunction('Mod')
+            PhaseReader.initTransferFunction('Phase')
+            ModReader.setMaxMinRange(self.StartDSB.value()*multipliers_dict[self.StartFreqMultCB.currentText()],
+                                     self.StopDSB.value()*multipliers_dict[self.StopFreqMultCB.currentText()])
+            PhaseReader.setMaxMinRange(self.StartDSB.value()*multipliers_dict[self.StartFreqMultCB.currentText()],
+                                       self.StopDSB.value()*multipliers_dict[self.StopFreqMultCB.currentText()])
+            self.traces = (Trace(self.TraceNameLE.text(), ModReader, self.color.name(),
+                                 self.LineTypeCB.currentText(), 'nothing', TraceType.Module),
+                           Trace(self.TraceNameLE.text(), PhaseReader, self.color.name(),
+                                 self.LineTypeCB.currentText(), 'nothing', TraceType.Phase))
+        except:
+            QtWidgets.QMessageBox.critical(self, "Error", f"Hubo un problema al intentar generar la curva.")
+            self.traces = None
         self.done(0)
         pass
 
@@ -88,6 +102,7 @@ class LoadTransferFunctionPopUp(QtWidgets.QDialog, UI_LoadTransferFunctionPopUp.
         palette = self.ColorButton.palette()
         palette.setColor(QtGui.QPalette.ColorRole.Button, self.color)
         self.ColorButton.setPalette(palette)
+
 
 if __name__ == "__main__":
     import sys

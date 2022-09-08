@@ -10,6 +10,7 @@ from DataReader.TFDataReaderDeriv import TFDataReader
 from Utils.Trace import Trace, TraceType
 from Windows.AddSignalResponse import AddSignalResponse
 from Windows.AddTracePopUp import AddTracePopUp
+from Windows.ModTFTracePopUp import ModTFTracePopUp
 from Windows.ModTracePopUp import ModTracePopUp
 from Windows.LoadTransferFunctionPopUp import LoadTransferFunctionPopUp
 from UI.UI import Ui_MainWindow
@@ -90,31 +91,64 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         try:
             traceindex = self.TracesListBox.indexFromItem(traceitem)
             selectedtrace = self.traceslist[traceindex.row()]
-            popup = ModTracePopUp(selectedtrace.tracename, selectedtrace.color, selectedtrace.marker,
-                                  selectedtrace.linetype)
-            update = popup.exec()
-            for i in range(len(update)):
-                if update[i] != "":
-                    match i:
-                        case 0:
-                            if isinstance(selectedtrace.reader,
-                                          TFDataReader) and selectedtrace.type == TraceType.Module:
-                                index2remove = self.TransFuncComboBox.findText(str(selectedtrace))
-                                self.TransFuncComboBox.removeItem(index2remove)
-                                selectedtrace.tracename = update[0]
-                                traceitem.setText(str(selectedtrace))
-                                self.TransFuncComboBox.addItem(str(selectedtrace))
-                            else:
-                                selectedtrace.tracename = update[0]
-                                traceitem.setText(str(selectedtrace))
+            if isinstance(selectedtrace.reader, TFDataReader):
+                popup = ModTFTracePopUp(selectedtrace.tracename, selectedtrace.color, selectedtrace.marker,
+                                        selectedtrace.linetype, selectedtrace.reader)
+                update = popup.exec()
+                for i in range(len(update)):
+                    if update[i] != "":
+                        match i:
+                            case 0:
+                                if isinstance(selectedtrace.reader,
+                                              TFDataReader) and selectedtrace.type == TraceType.Module:
+                                    index2remove = self.TransFuncComboBox.findText(str(selectedtrace))
+                                    self.TransFuncComboBox.removeItem(index2remove)
+                                    selectedtrace.tracename = update[0]
+                                    traceitem.setText(str(selectedtrace))
+                                    self.TransFuncComboBox.addItem(str(selectedtrace))
+                                else:
+                                    selectedtrace.tracename = update[0]
+                                    traceitem.setText(str(selectedtrace))
 
-                        case 1:
-                            selectedtrace.color = update[1]
+                            case 1:
+                                selectedtrace.color = update[1]
 
-                        case 2:
-                            selectedtrace.linetype = update[2]
-                        case 3:
-                            selectedtrace.marker = update[3]
+                            case 2:
+                                selectedtrace.linetype = update[2]
+                            case 3:
+                                selectedtrace.marker = update[3]
+                            case 4:
+                                if selectedtrace.type == TraceType.Module:
+                                    update[4].initTransferFunction('Mod')
+                                elif selectedtrace.type == TraceType.Phase:
+                                    update[4].initTransferFunction('Phase')
+                                selectedtrace.reader = update[4]
+            else:
+                popup = ModTracePopUp(selectedtrace.tracename, selectedtrace.color, selectedtrace.marker,
+                                      selectedtrace.linetype)
+                update = popup.exec()
+                for i in range(len(update)):
+                    if update[i] != "":
+                        match i:
+                            case 0:
+                                if isinstance(selectedtrace.reader,
+                                              TFDataReader) and selectedtrace.type == TraceType.Module:
+                                    index2remove = self.TransFuncComboBox.findText(str(selectedtrace))
+                                    self.TransFuncComboBox.removeItem(index2remove)
+                                    selectedtrace.tracename = update[0]
+                                    traceitem.setText(str(selectedtrace))
+                                    self.TransFuncComboBox.addItem(str(selectedtrace))
+                                else:
+                                    selectedtrace.tracename = update[0]
+                                    traceitem.setText(str(selectedtrace))
+
+                            case 1:
+                                selectedtrace.color = update[1]
+
+                            case 2:
+                                selectedtrace.linetype = update[2]
+                            case 3:
+                                selectedtrace.marker = update[3]
 
         except:
             types, values, traces = sys.exc_info()

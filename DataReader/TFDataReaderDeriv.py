@@ -10,6 +10,12 @@ import sympy as sp
 from typing import Tuple, Type
 from Utils.Trace import Trace
 
+multipliers_dict = {'mHz': 0.1,
+                    'Hz': 1,
+                    'kHz': 1e3,
+                    'MHz': 1e6,
+                    'GHz': 1e12}
+
 
 class TFDataReader(DataReader):
 
@@ -18,6 +24,8 @@ class TFDataReader(DataReader):
         self.data2get = 'Mod'
         self.transFunc: signal.TransferFunction = None
         self.strexpr = tfstr
+        self.startFreq = 10
+        self.stopFreq = 1e6
         self.s = sp.Symbol('s')  # Variable de expresion
         self.expr = parse_expr(tfstr, local_dict={'s': self.s, 'S': self.s}, transformations=T[:])
         self.symbolslist = self.expr.free_symbols
@@ -28,6 +36,10 @@ class TFDataReader(DataReader):
 
     def getExpression(self):
         return self.expr
+
+    def setMaxMinRange(self, start, stop):
+        self.startFreq = start
+        self.stopFreq = stop
 
     def initTransferFunction(self, data2get: str):
         self.data2get = data2get
@@ -53,15 +65,16 @@ class TFDataReader(DataReader):
         En caso de ser de Respuesta del sistema devuelve
     '''
     def read(self) -> DataFrame:
-
+        decquant = int(np.ceil(np.log10(self.stopFreq*2*np.pi)-np.log10(self.startFreq*2*np.pi)))
+        wrange = np.logspace(np.log10(self.startFreq*2*np.pi), np.log10(self.stopFreq*2*np.pi), num=decquant*500)
         match self.data2get:
             case 'Mod':
-                w, mag, phase = signal.bode(self.transFunc, n=2000)
+                w, mag, phase = signal.bode(self.transFunc, w=wrange)
                 w = np.array(w, dtype=float)
                 mag = np.array(mag, dtype=float)
                 data = DataFrame.from_dict({'Frquency': w / (2 * np.pi), 'Module': 10**(mag/20)})
             case 'Phase':
-                w, mag, phase = signal.bode(self.transFunc, n=2000)
+                w, mag, phase = signal.bode(self.transFunc, w=wrange)
                 w = np.array(w, dtype=float)
                 phase = np.array(phase, dtype=float)
                 data = DataFrame.from_dict({'Frquency': w / (2 * np.pi), 'Phase': phase})
