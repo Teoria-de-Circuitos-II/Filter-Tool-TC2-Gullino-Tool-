@@ -62,8 +62,18 @@ class SpiceDataReader(DataReader):
                     frequ = self.RawData.get_trace(self.xcolumn).get_wave(0)
                     dictData = {self.xcolumn: np.real(frequ)}
                     for i in range(self.step2read):
-                        dictData[self.ycolumn + " step %d" % i] = self.yoperation(np.angle(
-                            self.RawData.get_trace(self.ycolumn).get_wave(i), deg=True))
+                        phasearray = np.angle(self.RawData.get_trace(self.ycolumn).get_wave(i), deg=True)
+                        anglecorrection = 0
+                        for i in range(len(phasearray)):
+                            if i == len(phasearray) - 1:
+                                phasearray[i] += anglecorrection
+                                continue
+                            phasearray[i] += anglecorrection
+                            if phasearray[i + 1] - phasearray[i] + anglecorrection > 180:
+                                anglecorrection -= 360
+                            elif phasearray[i + 1] - phasearray[i] + anglecorrection < -180:
+                                anglecorrection += 360
+                        dictData[self.ycolumn + " step %d" % i] = self.yoperation(phasearray)
                 case "Signal":
                     time = np.abs(self.RawData.get_trace(self.xcolumn).get_wave(0))
                     dictData = {self.xcolumn: self.xoperation(time)}
@@ -80,9 +90,20 @@ class SpiceDataReader(DataReader):
                     dictData = {'Frequency': self.xoperation(np.real(frequ)), self.ycolumn: self.yoperation((np.abs(
                         self.RawData.get_trace(self.ycolumn).get_wave())))}
                 case "Phase":
+                    phasearray = np.angle(self.RawData.get_trace(self.ycolumn).get_wave(), deg=True)
+                    anglecorrection = 0
+                    for i in range(len(phasearray)):
+                        if i == len(phasearray)-1:
+                            phasearray[i] += anglecorrection
+                            continue
+                        phasearray[i] += anglecorrection
+                        if phasearray[i+1]-phasearray[i]+anglecorrection > 180:
+                            anglecorrection -= 360
+                        elif phasearray[i+1]-phasearray[i]+anglecorrection < -180:
+                            anglecorrection += 360
+
                     frequ = self.RawData.get_trace('frequency').get_wave()
-                    dictData = {'Frequency': self.xoperation(np.real(frequ)), self.ycolumn: self.yoperation(np.angle(
-                        self.RawData.get_trace(self.ycolumn).get_wave(), deg=True))}
+                    dictData = {'Frequency': self.xoperation(np.real(frequ)), self.ycolumn: self.yoperation(phasearray)}
                 case "Signal":
                     time = self.RawData.get_trace('time').get_wave()
                     dictData = {'Time': np.abs(self.xoperation(time)),
