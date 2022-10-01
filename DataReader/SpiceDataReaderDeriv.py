@@ -64,14 +64,14 @@ class SpiceDataReader(DataReader):
                     for i in range(self.step2read):
                         phasearray = np.angle(self.RawData.get_trace(self.ycolumn).get_wave(i), deg=True)
                         anglecorrection = 0
-                        for i in range(len(phasearray)):
-                            if i == len(phasearray) - 1:
-                                phasearray[i] += anglecorrection
+                        for k in range(len(phasearray)):
+                            if k == len(phasearray) - 1:
+                                phasearray[k] += anglecorrection
                                 continue
-                            phasearray[i] += anglecorrection
-                            if phasearray[i + 1] - phasearray[i] + anglecorrection > 180:
+                            phasearray[k] += anglecorrection
+                            if phasearray[k + 1] - phasearray[k] + anglecorrection > 180:
                                 anglecorrection -= 360
-                            elif phasearray[i + 1] - phasearray[i] + anglecorrection < -180:
+                            elif phasearray[k + 1] - phasearray[k] + anglecorrection < -180:
                                 anglecorrection += 360
                         dictData[self.ycolumn + " step %d" % i] = self.yoperation(phasearray)
                 case "Signal":
